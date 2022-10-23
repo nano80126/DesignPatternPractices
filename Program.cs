@@ -12,7 +12,9 @@ namespace DesignPatternPractices
             Console.WriteLine("Hello World!");
 
             //RunSingletonThread();
-            RunSingletonTask();
+            //RunSingletonTask();
+            RunFactory();
+
 
             Console.WriteLine("Please enter any key to leave.");
             Console.ReadKey();
@@ -73,6 +75,17 @@ namespace DesignPatternPractices
 
 
             Task.WaitAll(t1, t2);
+        }
+        #endregion
+
+        #region 工廠模式
+        private static void RunFactory ()
+        {
+            Restaurant rSteak = new Restaurant(new SteakFactory());
+            rSteak.MealOrder();
+
+            Restaurant rPork = new Restaurant(new PorkFactory());
+            rPork.MealOrder();
         }
         #endregion
     }
