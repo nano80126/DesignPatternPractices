@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DesignPatternPractices.CreationalPatterns
 {
@@ -83,7 +79,6 @@ namespace DesignPatternPractices.CreationalPatterns
             return meal;
         }
     }
-
 
 #if false
     public class MealFactory

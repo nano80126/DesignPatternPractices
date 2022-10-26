@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using DesignPatternPractices.CreationalPatterns;
@@ -13,8 +15,13 @@ namespace DesignPatternPractices
 
             //RunSingletonThread();
             //RunSingletonTask();
-            RunFactory();
+            //RunFactory();
 
+            //RunFactory();
+            //Console.WriteLine("-----------------------------");
+            //RunAbstractFactory();
+
+            RunBuilder();
 
             Console.WriteLine("Please enter any key to leave.");
             Console.ReadKey();
@@ -86,6 +93,72 @@ namespace DesignPatternPractices
 
             Restaurant rPork = new Restaurant(new PorkFactory());
             rPork.MealOrder();
+        }
+        #endregion
+        
+        #region 抽象工廠模式
+        private static void RunAbstractFactory()
+        {
+            AbstractRestaurant rSteak = new TWRestaurant();
+            rSteak.MealOrder(nameof(Steak));
+
+            AbstractRestaurant rPork = new ITRestaurant();
+            rPork.MealOrder(nameof(Pork));
+        }
+        #endregion
+
+        #region 生成器模式
+
+        private static void RunBuilder ()
+        {
+            ComputerFactory cf = new ComputerFactory();
+            ComputerStore store = new ComputerStore(cf);
+            Computer computer = store.MixSpec();
+
+            Console.WriteLine($"{computer}");
+        }
+        #endregion
+
+
+        #region AddTwoNumbers (LEECODE 2)
+        public class ListNode
+        {
+            public int val;
+            public ListNode next;
+            public ListNode(int val = 0, ListNode next = null)
+            {
+                this.val = val;
+                this.next = next;
+            }
+        }
+
+        public static ListNode AddTwoNumbers(ListNode l1, ListNode l2)
+        {
+            ListNode node1 = l1;
+            ListNode node2 = l2;
+
+            int first = node1.val + node2.val;
+            ListNode res = new ListNode(first % 10);
+            ListNode result = res;
+
+            int plus = first / 10;
+
+            //Console.WriteLine($"{res.val} {plus}");
+            while (node1?.next != null || node2?.next != null)
+            {
+                node1 = node1?.next;
+                node2 = node2?.next;
+
+                int value = ((node1 != null ? node1.val : 0) + (node2 != null ? node2.val : 0));
+                //Console.WriteLine($"{node1.val} {node2.val} {value} {plus}");
+
+                res.next = new ListNode();
+                res = res.next;
+                res.val += (value + plus) % 10;
+                //Console.WriteLine($"res: {res.val}");
+                plus = (value + plus) / 10;
+            }
+            return result;
         }
         #endregion
     }
