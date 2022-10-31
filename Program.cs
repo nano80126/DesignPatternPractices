@@ -20,8 +20,8 @@ namespace DesignPatternPractices
             //RunFactory();
             //Console.WriteLine("-----------------------------");
             //RunAbstractFactory();
-
-            RunBuilder();
+            //RunBuilder();
+            RunPrototype();
 
             Console.WriteLine("Please enter any key to leave.");
             Console.ReadKey();
@@ -108,7 +108,6 @@ namespace DesignPatternPractices
         #endregion
 
         #region 生成器模式
-
         private static void RunBuilder ()
         {
             ComputerFactory cf = new ComputerFactory();
@@ -119,6 +118,20 @@ namespace DesignPatternPractices
         }
         #endregion
 
+        #region 原型模式
+        private static void RunPrototype()
+        {
+            Tank tank = new Tank();
+            Console.WriteLine($"{tank.GetPosition().GetX()} {tank.GetPosition().GetY()}");
+            tank.SetPosition(5, 6);
+
+            Tank tank2 = (Tank)tank.Clone();
+            tank2.SetPosition(10, 5);
+
+            Console.WriteLine($"{tank.GetPosition().GetX()} {tank.GetPosition().GetY()}");
+            Console.WriteLine($"{tank2.GetPosition().GetX()} {tank2.GetPosition().GetY()}");
+        }
+        #endregion
 
         #region AddTwoNumbers (LEECODE 2)
         public class ListNode
