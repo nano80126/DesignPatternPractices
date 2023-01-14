@@ -31,7 +31,6 @@ namespace DesignPatternPractices.CreationalPatterns
         }
     }
 
-
     public class Chicken : CookMeal
     {
         public void Cook()
@@ -57,7 +56,6 @@ namespace DesignPatternPractices.CreationalPatterns
             Console.WriteLine($"送豬排");
         }
     }
-
 
     public class Restaurant
     {

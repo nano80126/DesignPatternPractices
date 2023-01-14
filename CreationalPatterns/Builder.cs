@@ -6,14 +6,10 @@ using System.Threading.Tasks;
 
 namespace DesignPatternPractices.CreationalPatterns
 {
-    ///
-    /// Product             最終被建立出來的物件類別
-    /// Builder             用來定義建構物件過程中個必要步驟(方法)的介面
-    /// ConcreteBuilder     實作 Builder 介面，實際用來建構物件的類別
-    /// Director            負責指揮 ConcreteBuilder 該如果建構物件
-    /// 
 
-
+    /// <summary>
+    /// 實際要被建立出來的物件
+    /// </summary>
     public class Computer
     {
         private string cpu;
@@ -50,7 +46,6 @@ namespace DesignPatternPractices.CreationalPatterns
             this.vga = vga;
         }
 
-
         public override string ToString()
         {
             return $"Computer: \n" +
@@ -65,6 +60,9 @@ namespace DesignPatternPractices.CreationalPatterns
     }
 
 
+    /// <summary>
+    /// 定義建構物件所需各個必要的方法的抽象類別 (因為包含 Field 或 Property 故使用類別)
+    /// </summary>
     public abstract class ComputerBuilder
     {
         protected Computer computer;
@@ -75,10 +73,17 @@ namespace DesignPatternPractices.CreationalPatterns
         public abstract ComputerBuilder SetVGA(string vga);
         public abstract ComputerBuilder SetKeyBoard(string keyboard);
         public abstract ComputerBuilder SetMouse(string mouse);
-
+        /// <summary>
+        /// 生成方法
+        /// </summary>
+        /// <returns></returns>
         public abstract Computer Build();
     }
 
+
+    /// <summary>
+    /// 實體 Builder
+    /// </summary>
     public class ComputerFactory : ComputerBuilder
     {
         private string cpu;
@@ -130,7 +135,9 @@ namespace DesignPatternPractices.CreationalPatterns
         }
     }
 
-
+    /// <summary>
+    /// Director
+    /// </summary>
     public class ComputerStore
     {
         private ComputerBuilder computerBuilder;

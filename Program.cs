@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -21,11 +22,265 @@ namespace DesignPatternPractices
             //Console.WriteLine("-----------------------------");
             //RunAbstractFactory();
             //RunBuilder();
-            RunPrototype();
+            //RunPrototype();s
+
+            var result = ConvertToTitle(701);
+
+            Console.WriteLine($"result: {result}");
 
             Console.WriteLine("Please enter any key to leave.");
             Console.ReadKey();
         }
+
+        public static string ConvertToTitle(int columnNumber)
+        {
+            /// if columnNumber = 27
+            /// 27 / 26 = 1 ... 1 => AA
+            /// if columnNumber = 26
+            /// 26 / 26 = 1 ... 0 => Z => A + 25 => (26 - 1) % 26
+            
+            /// 16 進位 => 0 ~ 15 => x / 16
+            /// 
+            /// 26 進位 => 1 ~ 26 => (x - 1) / 26
+
+            StringBuilder builder = new StringBuilder();
+
+            while (columnNumber > 0)
+            {
+                builder.Insert(0, (char)((columnNumber - 1) % 26 + 'A'));
+
+                columnNumber = (columnNumber - 1) / 26;
+            }
+
+            return builder.ToString();
+        }
+
+        public static string Multiply(string num1, string num2)
+        {
+            if (num1 == "0" || num2 == "0") return "0";
+            int[] arr = new int[num1.Length + num2.Length];
+            for (int i = num1.Length - 1; i >= 0; i--)
+            {
+                for (int j = num2.Length - 1; j >= 0; j--)
+                {
+                    int p1 = i + j;
+                    int p2 = i + j + 1;
+
+                    // 換算為實際 number
+                    int mul = (num1[i] - '0') * (num2[j] - '0');
+
+                    // arr[p2] = 上一圈 arr[p1]
+                    int sum = mul + arr[p2]; 
+                    arr[p2] = sum % 10;
+                    arr[p1] += sum / 10;
+                }
+            }
+
+            StringBuilder sb = new StringBuilder(arr.Length);
+
+            foreach (int item in arr)
+            {
+                if (sb.Length > 0 || item != 0)
+                {
+                    sb.Append(item);
+                }
+            }
+
+            return sb.ToString();
+        }
+
+        #region LeetCode
+        public static int Search(int[] nums, int target)
+        {
+            int left = 0;
+            int right = nums.Length - 1;
+
+            // [7 0 1 2 4 5 6] 5
+            while (left <= right)
+            {
+                int mid = (left + right) / 2;
+                if (nums[mid] == target) return mid;
+                else if (nums[mid] < target)
+                {
+                    if (nums[left] > nums[mid] && nums[right] < target)
+                    {
+                        right = mid - 1;
+                    }
+                    else
+                    {
+                        left = mid + 1;
+                    }
+                }
+                else
+                {
+                    if (nums[right] < nums[mid] && nums[left] > target)
+                    {
+                        left = mid + 1;
+                    }
+                    else
+                    {
+                        right = mid - 1;
+                    }
+                }
+            }
+            return -1;
+        }
+
+        public static void NextPermutation(int[] nums)
+        {
+            int n = nums.Length;
+            int k, l;
+
+            for (k = n - 2; k >= 0; k--)
+            {
+                if (nums[k] < nums[k + 1]) break;
+            }
+
+            if (k < 0)
+            {
+                Array.Reverse(nums);
+            }
+            else
+            {
+                for (l = n - 1; l > k; l--)
+                {
+                    if (nums[l] > nums[k]) break;
+                }
+                int temp = nums[l];
+                nums[l] = nums[k];
+                nums[k] = temp;
+
+                Array.Reverse(nums, k + 1, nums.Length - k - 1);
+            }
+        }
+
+        public static ListNode SwapPairs(ListNode head)
+        {
+            ListNode zero = new ListNode(-1);
+            zero.next = head;
+
+            ListNode node = head;   // 跑迴圈用
+
+            ListNode last = zero;  // 紀錄上一次迴圈的尾
+
+            while (node != null && node.next != null)
+            {
+                ListNode left = node;
+                ListNode right = node.next;
+                // 先跑到下一回圈的開頭
+                node = node.next?.next;
+
+                last.next = right;
+                // 執行交換
+                Swap(left, right);
+
+                last = left;
+            }
+
+            return zero.next;
+        }
+
+        public static void Swap(ListNode left, ListNode right)
+        {
+            left.next = right.next;
+            right.next = left;
+        }
+
+        public static ListNode RemoveNthFromEend(ListNode head, int n)
+        {
+            List<int> list = new List<int>();
+            ListNode result = head;
+
+            while (result != null)
+            {
+                list.Add(head.val);
+                result = result.next;
+            }
+
+            if (list.Count - 1 == 0) return null;
+
+
+            result = head;
+            head = result;
+            if (list.Count == n)
+            {
+                head = result.next;
+                return head;
+            }
+
+            for (int i = 0; i < list.Count - 1 - n; i++)
+            {
+                result = result.next;
+            }
+
+            result.next = result.next.next;
+            return head;
+        }
+
+        public static IList<IList<int>> FourSum(int[] nums, int target)
+        {
+            List<IList<int>> list = new List<IList<int>>();
+
+            //if (nums.Length == 4 && nums.Sum() == target)
+            //{
+            //    list.Add(nums);
+            //    return list;
+            //}
+
+            // 排序
+            nums = nums.OrderBy(x => x).ToArray();
+
+            //if (nums[0] > target) return list;
+
+            Console.WriteLine($"{string.Join(",", nums)}\n------------------------------------");
+
+            for (int i = 0; i < nums.Length - 3; i++)
+            {
+                if (i > 0 && nums[i] == nums[i - 1]) { continue; }
+
+                for (int j = nums.Length - 1; j > i + 2; j--)
+                {
+                    if (j < nums.Length - 1 && nums[j] == nums[j + 1]) { continue; }
+
+                    int left = i + 1;
+                    int right = j - 1;
+
+                    while (left < right)
+                    {
+                        int sum = nums[i] + nums[left] + nums[right] + nums[j];
+
+                        if (sum < target)
+                        {
+                            left++;
+                        }
+                        else if (sum > target)
+                        {
+                            right--;
+                        }
+                        else
+                        {
+                            list.Add(new int[] { nums[i], nums[left], nums[right], nums[j] });
+
+                            int low = nums[left];
+                            int hight = nums[right];
+
+                            while (left < right && nums[left] == low)
+                            {
+                                left++;
+                            }
+
+                            while (left < right && nums[right] == hight)
+                            {
+                                right--;
+                            }
+                        }
+                    }
+                }
+            }
+
+            return list;
+        } 
+        #endregion
 
         #region 單例模式
         /// <summary>
@@ -86,7 +341,7 @@ namespace DesignPatternPractices
         #endregion
 
         #region 工廠模式
-        private static void RunFactory ()
+        private static void RunFactory()
         {
             Restaurant rSteak = new Restaurant(new SteakFactory());
             rSteak.MealOrder();
@@ -95,7 +350,7 @@ namespace DesignPatternPractices
             rPork.MealOrder();
         }
         #endregion
-        
+
         #region 抽象工廠模式
         private static void RunAbstractFactory()
         {
@@ -108,12 +363,14 @@ namespace DesignPatternPractices
         #endregion
 
         #region 生成器模式
-        private static void RunBuilder ()
+        private static void RunBuilder()
         {
-            ComputerFactory cf = new ComputerFactory();
-            ComputerStore store = new ComputerStore(cf);
+            ComputerStore store = new ComputerStore(new ComputerFactory());
             Computer computer = store.MixSpec();
 
+            Console.WriteLine($"{computer}");
+
+            computer = store.AppleSpec();
             Console.WriteLine($"{computer}");
         }
         #endregion
